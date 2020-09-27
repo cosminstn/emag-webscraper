@@ -1,5 +1,5 @@
 import { chromium } from "playwright";
-(async () => {
+const getEmagProductInfo = async function (product: string) {
     const browser = await chromium.launch({ headless: false });
     const context = await browser.newContext();
     const page = await context.newPage();
@@ -16,7 +16,7 @@ import { chromium } from "playwright";
     await page.waitForSelector(".searchbox-wrapper #searchboxTrigger");
     await page.click(".searchbox-wrapper #searchboxTrigger");
 
-    await page.fill(".searchbox-wrapper #searchboxTrigger", "iphone 11");
+    await page.fill(".searchbox-wrapper #searchboxTrigger", product);
     await page.press(".searchbox-wrapper #searchboxTrigger", "Enter");
 
     await navigationPromise;
@@ -34,11 +34,53 @@ import { chromium } from "playwright";
     const priceHandler = await page.waitForSelector(
         ".product-highlight > div > .d-inline-flex > .w-50 > .product-new-price"
     );
-
     const price = await priceHandler.innerText();
 
-    console.log("Found price: " + price);
+    const productCodeHandler = await page.waitForSelector(
+        "#page-skin > .container > .page-skin-inner > .page-header > .clearfix > .product-code-display"
+    );
+    const productCode = (await productCodeHandler.innerText()).replace(
+        "Cod produs: ",
+        ""
+    );
+
+    let reviewsScore = null;
+    let noReviews = 0;
+    try {
+        const reviewsScoreHandler = await page.waitForSelector(
+            ".page-skin-inner > .row > .col-sm-5 > .product-highlights-wrapper > .row > .col-sm-12 > .product-highlight > .star-rating-container > .star-rating-text",
+            {
+                timeout: 2000,
+            }
+        );
+        reviewsScore = await reviewsScoreHandler.innerText();
+
+        const noReviewsHandler = await page.waitForSelector(
+            ".page-skin-inner > .row > .col-sm-5 > .product-highlights-wrapper > .row > .col-sm-12 > .product-highlight > .hidden-xs > .gtm_rp160118",
+            {
+                timeout: 100,
+            }
+        );
+        noReviews = parseInt(await noReviewsHandler.innerText());
+    } catch {}
+
+    console.log(
+        `Product: ${product} Found price: ${price}, product code: ${productCode}, reviews score: ${reviewsScore}, no reviews: ${noReviews}`
+    );
 
     await page.close();
     await browser.close();
+};
+
+(async () => {
+    const products = [
+        "apple watch 6 44mm",
+        "iphone 11",
+        "samsung s20",
+        "ipad pro 2020",
+    ];
+
+    products.forEach(async (product) => {
+        await getEmagProductInfo(product);
+    });
 })();
