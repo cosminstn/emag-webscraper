@@ -1,0 +1,31 @@
+{
+    "name": "emag-webscraper",
+    "version": "1.0.0",
+    "description": "Web scraper that extracts products catalog from emag.ro",
+    "main": "dist/app.js",
+    "scripts": {
+        "dev": "tsc && node dist/app.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/cosmyn9708/emag-webscraper.git"
+    },
+    "keywords": [
+        "emag"
+    ],
+    "author": "Cosmin Stoian",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/cosmyn9708/emag-webscraper/issues"
+    },
+    "homepage": "https://github.com/cosmyn9708/emag-webscraper#readme",
+    "devDependencies": {
+        "playwright": "^1.4.2",
+        "tslint": "^6.1.3",
+        "typescript": "^4.0.3"
+    },
+    "dependencies": {
+        "@types/node": "^14.11.2"
+    }
+}
