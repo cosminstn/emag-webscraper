@@ -76,11 +76,17 @@ const getEmagProductInfo = async function (product: string) {
     const products = [
         "apple watch 6 44mm",
         "iphone 11",
+        "iphone 11 pro",
         "samsung s20",
         "ipad pro 2020",
     ];
 
-    products.forEach(async (product) => {
-        await getEmagProductInfo(product);
-    });
+    const startTime = Date.now();
+
+    const promises = products.map((product) => getEmagProductInfo(product));
+
+    await Promise.all(promises);
+    const timeEffortInMillis = Date.now() - startTime;
+    // TODO: Am incercat si sa refolosesc acelasi obiect de browser si pentru cazul curent salvez 1 secunda, doar ca pare ca nu se mai ajusteaza inaltimea ferestrei de browser la dimensiunea dorita.
+    console.log(`Time effort:  ${timeEffortInMillis} millis`);
 })();
